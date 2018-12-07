@@ -10,7 +10,7 @@ DATA SEGMENT
     NEGATIVE_NUM DB ?
     
     ;output strings
-    string0 DB 'Nums is: -1,2,0,0,1,-9$'
+    string0 DB 'Nums is: -1,2,0,0,1,-9','$'
     string1 DB 'Positive number:','$'
     string2 DB 'Zero number:','$'
     string3 DB 'Negative number:','$'
