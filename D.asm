@@ -12,8 +12,8 @@ ENDM
 DATA SEGMENT
     Start_String db 'Please input score:',0DH,0AH,'$';开始的提示代码
     Error_String DB 0DH,0AH,'Input Error! Please try again :',0DH,0AH,'$';错误提示字符串
-    Line_String db '--------------------',0DH,0AH,'$'
-    Commet_String db 'R:rank',0DH,0AH,'N:student_Number',0DH,0AH,'S:score',0DH,0AH,'$';符号解释
+    Line_String db 0DH,0AH,'--------------------',0DH,0AH,'$'
+    Commet_String db 'R:rank',0DH,0AH,'N:student_Number',0DH,0AH,'S:score','$';符号解释
     Result_String db 0DH,0AH,'R N S',0DH,0AH,'$'
     Score db 100 DUP(?),'$' ;用于存放成绩
     Rank db 100 DUP(?),'$'  ;用于存放排名
@@ -119,6 +119,7 @@ Input_NUM:
     jb Print_Error
     cmp al,'9'
     ja Print_Error
+    MOV	BYTE PTR[SI],AL
     inc SI;                 指向下一个字节
 
     call InputChar
@@ -160,10 +161,12 @@ Sort_Loop:                  ;排序,到这步骤，Score里存的格式为 分�
 
 ;输出结果
 Print_Result:
-    
+    PrintString Line_String
     PrintString Result_String
-    PrintString Rank;一条记录的格式为: 排名+空格+学号+空格+成绩+空格+换行
-    
+    PrintString rank
+    PrintString Line_String
+    PrintString Commet_String
+    PrintString Line_String
     mov AH,4CH
 	int	21H
 CODE ENDS
