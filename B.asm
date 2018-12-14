@@ -1,34 +1,50 @@
-;data
+;显示字符串的宏
+PrintString MACRO STR							
+	MOV	AH,	9
+	MOV	DX,	SEG STR
+	MOV	DS,	DX
+	MOV	DX,	OFFSET STR
+	INT	21H
+ENDM
+
+;数据段
 DATA SEGMENT
-    ;nums
-    NUMS DW -1,2,0,0,1,-9
+    ;nums存放的是数据
+    NUMS DW -8,2,0,0,4,-3,1,1,5
     COUNT EQU $-NUMS
     
-    ;output data
-    POSITIVE_NUM DB ?
-    ZERO_NUM DB ?
-    NEGATIVE_NUM DB ?
+    ;显示输出的数据
+    Positive_Num DB ?   ;正数的个数
+    Zero_Num DB ?       ;零的个数
+    NEGATIVE_NUM DB ?   ;负数的个数
     
-    ;output strings
-    string0 DB 'Nums is: -1,2,0,0,1,-9','$'
-    string1 DB 'Positive number:','$'
-    string2 DB 'Zero number:','$'
-    string3 DB 'Negative number:','$'
+    EnterString DB 0DH,0AH,'$';回车
+    
+    ;输出的提示字符串
+    Start_String DB 'Nums is: -8,2,0,0,4,-3,1,1,5','$'
+    Positive_Result DB 'Positive number:','$'
+    Zero_Result DB 'Zero number:','$'
+    Negative_Result DB 'Negative number:','$'
 DATA ENDS
 
 
-;stack
+;堆栈段
 STACK SEGMENT STACK'STACK'
     DB 100H DUP(?)
 STACK ENDS
 
 
-;code
+;代码段
+;DL存放正数的个数
+;DH存放零的个数
+;AH存放负数的个数
 CODE SEGMENT
     ASSUME CS:CODE,DS:DATA,SS:STACK
 START:
+    ;把data的基地址地址存到dx
     MOV AX,DATA
     MOV DS,AX
+    ;把count存到cx里
     MOV CX,COUNT
     SHR CX,1        ;dw=2db
     MOV DX,0
@@ -50,13 +66,13 @@ NEXT:
     INC BX
     LOOP COMPERE
     
-    ;POSITIVE_NUM
+    ;Positive_Num
     ADD DL,48
-    MOV POSITIVE_NUM,DL
+    MOV Positive_Num,DL
     
-    ;ZERO_NUM
+    ;Zero_Num
     ADD DH,48
-    MOV ZERO_NUM,DH
+    MOV Zero_Num,DH
 
     ;NEGATIVE_NUM
     ADD AH,48
@@ -64,57 +80,32 @@ NEXT:
     
 DISPLAY:
     sub dx,dx       ;dx to zero
-    MOV AH,09H
-    mov dx,offset string0
-    int 21h
-    
-    ;display enter
-    mov ah,02h
-    mov dl,0dh
-    int 21h
-    mov ah,02h
-    mov dl,0ah
-    int 21h 
+    ;输出开始的提示字符串
+    PrintString Start_String
+    PrintString EnterString
 
-    sub dx,dx       ;dx to zero
-
-    ;POSITIVE_NUM
-    mov dx,offset string1
-	mov ax,0900h
-	int 21h
-
-	mov dl,[POSITIVE_NUM]
+    ;输出零的结果
+    PrintString Zero_Result
+    mov dl,[Zero_Num]
 	mov ax,0200h
 	int 21h
+    PrintString EnterString
 
-    mov dl,0dh
-    int 21h
-    mov dl,0ah
-    int 21h
-	
-	mov dx,offset string2
-	mov ax,0900h
-	int 21h
-	
-	mov dl,[ZERO_NUM]
+    ;输出正数的结果
+    PrintString Positive_Result
+    mov dl,[POSITIVE_NUM]
 	mov ax,0200h
 	int 21h
+    PrintString EnterString
 
-    mov dl,0dh
-    int 21h
-    mov dl,0ah
-    int 21h
-
-    mov dx,offset string3
-	mov ax,0900h
-	int 21h
-    
+    ;输出负数的结果
+    PrintString Negative_Result
+    mov dl,[NEGATIVE_NUM]
 	mov ax,0200h
-	mov dl,[NEGATIVE_NUM]
 	int 21h
-	
-	mov ax,4c00h
-	int 21h
+    PrintString EnterString
 
+    mov AH,4CH
+	int	21H
 CODE ENDS
     END START
