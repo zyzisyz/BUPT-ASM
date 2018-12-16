@@ -8,7 +8,7 @@ PrintString MACRO STR
 ENDM
 
 DATA SEGMENT
-    NUMS DW 1,3,5,7,9,4,6,15,18,0,0,0,2,12,17,19;待检测数字
+    NUMS DW -2，-1，0，0，0，-9，1，2，3，4，-7，-1，-2;待检测数字
     COUNT EQU $-NUMS
 
     Plus_Odd        DB  (?);存储大于0的奇数数字
@@ -20,7 +20,7 @@ DATA SEGMENT
     EnterString DB 0DH,0AH,'$';回车
 
     ;用于输出提示的
-    STRING0 DB 'Nums are: -1,2,0,0,1,-9','$'
+    STRING0 DB 'Nums are: -2，-1，0，0，0，-9，1，2，3，4，-7，-1，-2','$'
     STRING1 DB 'The number of Plus Odd is: ','$';
     STRING2 DB 'The number of ZERO is: ','$';
     STRING3 DB 'The number of Minus Odd is: ','$';

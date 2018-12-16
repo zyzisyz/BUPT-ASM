@@ -21,7 +21,7 @@ DATA SEGMENT
     EnterString DB 0DH,0AH,'$';回车
     
     ;输出的提示字符串
-    Start_String DB 'Nums is: -8,2,0,0,4,-3,1,1,5','$'
+    Start_String DB 'Nums are: -8,2,0,0,4,-3,1,1,5','$'
     Positive_Result DB 'Positive number:','$'
     Zero_Result DB 'Zero number:','$'
     Negative_Result DB 'Negative number:','$'
